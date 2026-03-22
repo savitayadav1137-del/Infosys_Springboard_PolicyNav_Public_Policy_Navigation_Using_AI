@@ -55,7 +55,7 @@ Milestone 2 includes the following UI pages:
 
 ## ✅ Signup Page
 <img width="1904" height="846" alt="Screenshot 2026-03-21 152030" src="https://github.com/user-attachments/assets/614bf565-2741-4969-8c14-5ff3241d9248" />
-## ✅ Forgot Password Page and OTP verification page
+##  ✅ Forgot Password Page and OTP verification page
 <img width="1914" height="848" alt="Screenshot 2026-03-21 151946" src="https://github.com/user-attachments/assets/a7d9d3ad-eabf-4d7d-8f6e-308bf4728b86" />
 <img width="1890" height="869" alt="Screenshot 2026-03-21 152538" src="https://github.com/user-attachments/assets/29a07964-e9a6-431c-a5c9-6af5eca5feac" />
 <img width="1919" height="880" alt="Screenshot 2026-03-21 152314" src="https://github.com/user-attachments/assets/0ac21b0d-ec10-40f4-a4d3-fb59bb36ea72" />
