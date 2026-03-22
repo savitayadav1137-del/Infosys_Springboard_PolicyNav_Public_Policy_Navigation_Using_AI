@@ -1,1 +1,122 @@
+## Milestone 3 – Q&A Multi-Language Engine, Summarization, Knowledge Graph & Full Integration
+## Description
+In this milestone, PolicyNav was extended with an AI-powered Q&A engine, multi-language document summarization, and an interactive knowledge graph — all built on top of the authentication, admin interface, and readability dashboard from Milestone 2. The NLP pipeline uses Qwen 2.5-1.5B-Instruct (4-bit quantized via BitsAndBytes) for generation and NLLB-200 for translation across 8 Indian and international languages. Document retrieval is powered by FAISS with multilingual sentence embeddings. The entire system runs on Google Colab with persistent storage on Google Drive.
 
+## Features Implemented
+## Q&A Multi-Language Engine
+- RAG (Retrieval-Augmented Generation) pipeline using FAISS vector search + Qwen 2.5-1.5B-Instruct
+- Multilingual question input — user can ask in any of 8 supported languages; the question is auto-translated to English for retrieval, then the answer is translated back
+- Simplify language toggle that rewrites policy answers in plain, easy-to-understand language
+- Source attribution — every answer cites the policy document filenames it was retrieved from, along with response time
+- Chat history maintained within the session with styled user/bot message bubbles
+- Clear chat button to reset the conversation
+
+## Multi-Language Summarization
+- Supports input via pasted text or uploaded files (.txt, .pdf, .docx)
+- Adjustable summary length: Short / Medium / Long (80 / 180 / 300 tokens)
+- Two-stage pipeline: Qwen generates an English summary → NLLB-200 translates to the target language
+- Side-by-side tab display showing both the translated and the original English summary
+- Word count comparison between original document and generated summary
+- Supports 8 languages: English, Hindi, Tamil, Kannada, Telugu, Marathi, Bengali, Malayalam
+
+## Knowledge Graph
+- Upload one or more policy documents (.txt, .pdf) to extract a knowledge graph
+- Named entity recognition using spaCy en_core_web_sm — extracts ORG, GPE, LAW, PERSON entities
+- Graph built with NetworkX and rendered as a fully interactive HTML visualization using PyVis
+- Document nodes (blue) linked to entity nodes (green) — drag, zoom, and explore relationships
+- Graph saved to Google Drive under PolicyNav/graphs/ for persistence
+- Clear graph button to reset and re-generate
+
+## Vector Store & Document Ingestion
+- vector_store.py handles PDF, HTML, and TXT parsing, chunking (1500 chars), and FAISS indexing
+- Multilingual embeddings via paraphrase-multilingual-MiniLM-L12-v2 (SentenceTransformers)
+- Incremental ingestion — already-indexed documents are skipped on re-run for fast startup
+- FAISS index and metadata pickled to Google Drive; de-duplication prevents redundant chunks from the same file
+- Dedicated PDF downloader cell scrapes and downloads policy PDFs from official government scheme pages
+
+## Full Integration with Milestone 2
+- All new features (Chat, Summarize, Knowledge Graph) sit behind JWT-authenticated sessions
+- Sidebar navigation dynamically shows the correct menu for User vs Admin roles
+- OTP verification, account locking, password history, and forgot password flows fully intact
+- Readability Dashboard (Flesch, Kincaid, SMOG, Gunning Fog, Coleman-Liau) remains accessible from the sidebar
+- Admin Dashboard (user management, promote, unlock, delete) unchanged and functional
+
+## UI/UX Improvements
+- New font pairing: Syne (headings, buttons) + DM Sans (body) replacing the default system fonts
+- Full CSS variable system (--bg-deep, --accent-cyan, --accent-violet, etc.) for consistent theming
+- Subtle 48px grid texture and a 3px gradient top bar across all pages
+- Polished login page with branded card logo and tracked-caps subtitle
+- Sidebar user pill badge showing the logged-in email
+- Unified .page-header card with a cyan left-border accent across all feature pages
+- Styled form panels, input focus rings, progress bar, tabs, expanders, metrics, and custom scrollbar
+- Chat bubble animation (msgSlideIn) and page-load fadeUp transitions throughout
+
+## 🛠️ Tech Stack
+
+| Layer            | Technology |
+|------------------|------------|
+| UI Framework     | Streamlit + streamlit-option-menu |
+| LLM (Generation) | Qwen/Qwen2.5-1.5B-Instruct (4-bit via BitsAndBytes) |
+| Translation      | facebook/nllb-200-distilled-600M |
+| Embeddings       | paraphrase-multilingual-MiniLM-L12-v2 (SentenceTransformers) |
+| Vector Search    | FAISS (faiss-cpu) |
+| NER / Graphs     | spaCy en_core_web_sm + NetworkX + PyVis |
+| Authentication   | JWT (PyJWT) + bcrypt + SQLite |
+| Storage          | Google Drive (persistent) + SQLite |
+| Deployment       | Google Colab + pyngrok |
+
+## How to Run
+## 1. Install dependencies
+pip install streamlit pyngrok pyjwt watchdog bcrypt PyPDF2 streamlit-option-menu textstat plotly python-docx
+pip install sentence-transformers faiss-cpu transformers>=4.40.0 accelerate bitsandbytes spacy networkx pyvis torch langdetect beautifulsoup4
+python -m spacy download en_core_web_sm
+
+## 2. Mount Google Drive and set up directories
+Run Cell 2 in the notebook. This creates PolicyNav/, PolicyNav/documents/, and PolicyNav/graphs/ on your Drive and sets the APP_DIR environment variable.
+
+## 3. Download / upload policy PDFs
+Run Cell 3 (PDF downloader) to automatically scrape and download policy documents from official government scheme pages into PolicyNav/documents/. You can also manually upload PDFs to that folder.
+
+## 4. Ingest documents into FAISS
+Run the Auto-Ingest cell (Cell 9). New PDFs are parsed, chunked, embedded, and added to the FAISS index. Already-indexed files are skipped automatically.
+
+
+## 5.🔐 Add Colab Secrets
+
+Go to **Colab → Secrets** and add:
+
+| Secret Key         | Description |
+|--------------------|-------------|
+| `JWT_SECRET_KEY`   | Any strong random string |
+| `EMAIL_ID`         | Gmail address for sending OTPs |
+| `EMAIL_APP_PASSWORD` | Gmail App Password (not your main password) |
+| `ADMIN_EMAIL_ID`   | Admin account email |
+| `ADMIN_PASSWORD`   | Admin account password |
+| `NGROK_AUTHTOKEN`  | Your ngrok authentication token |
+
+## 6. Launch the app
+Run the Launch cell (Cell 11). This starts Streamlit and exposes it via an ngrok public URL printed in the output.
+
+## Screenshots
+## Q & A
+<img width="1918" height="963" alt="image" src="https://github.com/user-attachments/assets/54ddd99b-99f6-41d9-9817-e407ca81f514" />
+
+## Summarization
+<img width="1918" height="962" alt="image" src="https://github.com/user-attachments/assets/136cc24f-e5f2-49d4-81c5-bd0efcc77947" />
+
+<img width="1918" height="967" alt="image" src="https://github.com/user-attachments/assets/5ebfca2f-131f-42e8-8845-d6c6e580c4f2" />
+
+## Knowledge Graph
+<img width="1600" height="836" alt="559716486-0c13469c-b56d-44ac-9201-f10fe4b4818c" src="https://github.com/user-attachments/assets/c8113946-e535-4f13-9291-5710539aee6c" />
+
+<img width="1600" height="837" alt="559716556-ba4f47b7-a762-4326-a9a4-1a949c1d5f98" src="https://github.com/user-attachments/assets/49047463-2411-4ba1-b7f8-986307ee0193" />
+
+## Supported Languages
+English · Hindi · Tamil · Kannada · Telugu · Marathi · Bengali · Malayalam
+
+## Notes
+- The Qwen model is loaded in 4-bit quantization using BitsAndBytes to fit within Colab's GPU memory constraints.
+- FAISS index and metadata are stored on Google Drive and persist across Colab runtime resets. The users.db and policynav.db databases are also Drive-backed to prevent data loss on disconnection.
+- The NLLB-200 translator supports over 200 languages; the app exposes 8 Indian languages in the UI.
+- Knowledge graphs are saved as self-contained HTML files to PolicyNav/graphs/ and rendered inline in the Streamlit app via components.html.
+- All Milestone 2 security features (OTP, account lock, password history, JWT sessions) are fully preserved and unchanged.
