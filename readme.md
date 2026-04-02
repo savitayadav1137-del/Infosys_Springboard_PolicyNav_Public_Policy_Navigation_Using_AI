@@ -4,7 +4,7 @@ AI-Powered Policy Document Analysis & Navigation System
 Transforming complex policy documents into actionable insights using AI. ##Quick Links
 | Category | Link |
 |----------|------|
-| 🎥 Demo Video | video Link  |
+| 🎥 Demo Video | https://drive.google.com/file/d/1vN5ZewCjd-ZlPz1cYuHgVd_YzLUQf7LU/view?usp=drive_link |
 | 🧩 Source Code | This Repository |
 | 🧠 AI Models | Qwen · Sentence Transformers · FAISS |
 
